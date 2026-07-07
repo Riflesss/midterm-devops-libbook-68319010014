@@ -2,10 +2,10 @@
 
 **ชื่อ-นามสกุล:** นายกนต์ธร สุติยวัน
 **รหัสนักศึกษา:** 68319010014
-**ระดับชั้น/กลุ่มเรียน:** ปริญญาตรี ปี 4 / กลุ่ม DevOps
+**ระดับชั้น/กลุ่มเรียน:** ปวส.2 / 3
 **รหัสโปรเจกต์:** `libbook`
 
-[![CI - libbook](https://github.com/<github-username>/midterm-devops-libbook-68319010014/actions/workflows/ci.yml/badge.svg)](https://github.com/<github-username>/midterm-devops-libbook-68319010014/actions/workflows/ci.yml)
+[![CI - libbook](https://github.com/Riflesss/midterm-devops-libbook-68319010014/actions/workflows/ci.yml/badge.svg)](https://github.com/<github-username>/midterm-devops-libbook-68319010014/actions/workflows/ci.yml)
 
 > ⚠️ แทนที่ `<github-username>` และ `<รหัสนักศึกษา>` ใน badge URL ด้านบนด้วยข้อมูลจริงของคุณ หลังจาก push repo ขึ้น GitHub แล้ว badge จะแสดงสถานะ CI ล่าสุดโดยอัตโนมัติ
 
