@@ -1,6 +1,6 @@
 services:
   frontend:
-    image: yinyaodebaoyea/libbook-web:v1.0.0
+    image: yinyaodebaoyea/libbook-web:latest
     ports:
       - "8080:80"
     depends_on:
@@ -9,7 +9,7 @@ services:
       - libbook-net
 
   backend:
-    image: yinyaodebaoyea/libbook-api:v1.0.0
+    image: yinyaodebaoyea/libbook-api:latest
     ports:
       - "3000:3000"
     env_file:
