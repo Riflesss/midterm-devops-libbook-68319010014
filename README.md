@@ -10,27 +10,42 @@
 > CI workflow: [GitHub Actions](https://github.com/Riflesss/midterm-devops-libbook-68319010014/actions/workflows/ci.yml)
 
 ## คำอธิบายระบบ
-Libbook เป็นระบบบันทึกทะเบียนหนังสือของห้องสมุดวิทยาลัย พัฒนาด้วยสถาปัตยกรรม 3 ส่วน (frontend / backend / database) ที่รันแยกกันผ่าน Docker Compose ผู้ใช้สามารถเพิ่ม แก้ไข ลบ และดูรายการหนังสือได้ผ่านหน้าเว็บ โดยข้อมูลจะถูกเก็บอย่างถาวรใน PostgreSQL
+Libbook เป็นระบบจัดการทะเบียนหนังสือของห้องสมุดวิทยาลัย ซึ่งมี frontend, backend และ database แยกเป็น service โดยรันด้วย Docker Compose
 
-**Stack ที่ใช้:**
-- Backend: Node.js + Express + PostgreSQL (`pg`)
+- Backend: Node.js + Express + PostgreSQL
 - Frontend: Vue 3 + Vite
-- Container: Docker + Docker Compose
-- CI/CD: GitHub Actions (lint → test → build)
+- Database: PostgreSQL 16 (persistent volume)
+- CI: GitHub Actions (lint → test → build)
+
+ระบบรองรับการเพิ่ม, แก้ไข, ลบ, และแสดงผลรายการหนังสือทั้งหมดจากหน้าเว็บ โดยข้อมูลจะถูกเก็บอย่างถาวรใน PostgreSQL volume
 
 ## 📋 API Endpoints
 
-| Method | Endpoint            | คำอธิบาย                     |
-|--------|----------------------|-------------------------------|
-| GET    | `/health`            | ตรวจสอบสถานะเซิร์ฟเวอร์ → `{ status, version }` |
-| GET    | `/api/books`         | ดึงรายการหนังสือทั้งหมด        |
-| GET    | `/api/books/:id`     | ดึงข้อมูลหนังสือตาม id         |
-| POST   | `/api/books`         | เพิ่มหนังสือใหม่               |
-| PUT    | `/api/books/:id`     | แก้ไขข้อมูลหนังสือ             |
-| PATCH  | `/api/books/:id`     | แก้ไขบางส่วนของข้อมูลหนังสือ   |
-| DELETE | `/api/books/:id`     | ลบหนังสือ                      |
+| Method | Endpoint            | คำอธิบาย |
+|--------|---------------------|----------|
+| GET    | `/health`           | ตรวจสอบสถานะเซิร์ฟเวอร์และเวอร์ชัน |
+| GET    | `/api/books`        | ดึงรายการหนังสือทั้งหมด |
+| GET    | `/api/books/:id`    | ดึงหนังสือตาม `id` |
+| POST   | `/api/books`        | สร้างหนังสือใหม่ |
+| PUT    | `/api/books/:id`    | แก้ไขหนังสือทั้งหมดตาม `id` |
+| PATCH  | `/api/books/:id`    | แก้ไขบางส่วนของหนังสือตาม `id` |
+| DELETE | `/api/books/:id`    | ลบหนังสือตาม `id` |
 
-**ตัวอย่าง Body สำหรับ POST/PUT:**
+### ตัวอย่าง
+
+**GET /health**
+
+Response:
+```json
+{
+  "status": "ok",
+  "version": "1.0.0"
+}
+```
+
+**POST /api/books**
+
+Request body:
 ```json
 {
   "isbn": "978-616-000-000-0",
@@ -42,61 +57,120 @@ Libbook เป็นระบบบันทึกทะเบียนหนั
 }
 ```
 
+**PATCH /api/books/:id**
+
+Request body:
+```json
+{
+  "status": "borrowed"
+}
+```
+
+> หาก `id` ไม่พบ จะตอบกลับ `404 Not Found` สำหรับ `GET`, `PUT`, `PATCH`, และ `DELETE`
+
+## 🔧 Environment variables
+
+ไฟล์ `.env` ถูกอ่านโดย backend และ frontend build-time
+
+ค่าเริ่มต้นอยู่ใน `.env.example`
+
+```bash
+DB_HOST=db
+DB_PORT=5432
+DB_USER=libbook_user
+DB_PASSWORD=changeme
+DB_NAME=libbook
+PORT=3000
+VITE_API_URL=/api/books
+```
+
 ## 🚀 วิธีรันระบบ
 
 ### 1. เตรียมไฟล์ environment
+
 ```bash
 cp .env.example .env
-# แก้ไขค่าใน .env ตามต้องการ (DB_USER, DB_PASSWORD, DB_NAME)
 ```
 
 ### 2. โหมด Development (build image เอง)
+
 ```bash
 docker compose up --build
 ```
+
+บริการจะรันที่:
 - Frontend: http://localhost:8080
 - Backend API: http://localhost:3000
 - Health check: http://localhost:3000/health
 
+ข้อมูลหนังสือจะเก็บผ่าน volume `libbook-db-data` ซึ่งทำให้ข้อมูลยังอยู่หลัง restart container
+
 หยุดระบบ:
+
 ```bash
 docker compose down
 ```
 
 ### 3. โหมด Production (pull image จาก Docker Hub)
-แก้ไข `docker-compose.prod.yml` ให้ `<dockerhub-username>` เป็นชื่อบัญชี Docker Hub จริงของคุณ จากนั้นรัน:
+
 ```bash
+cp .env.example .env
+
 docker compose -f docker-compose.prod.yml up -d
 ```
-คำสั่งนี้จะ pull image `libbook-api` และ `libbook-web` จาก Docker Hub มารันได้ทันทีโดยไม่ต้องแก้โค้ดใด ๆ
+
+ระบบจะดึง images จาก Docker Hub และรันได้ทันทีโดยไม่ต้องแก้ไฟล์ใด ๆ
+
+หยุดระบบ:
+
+```bash
+docker compose -f docker-compose.prod.yml down
+```
 
 ## 🐳 Docker Hub
 
-- Backend image: `https://hub.docker.com/r/<dockerhub-username>/libbook-api`
-- Frontend image: `https://hub.docker.com/r/<dockerhub-username>/libbook-web`
+- Backend image: https://hub.docker.com/r/yinyaodebaoyea/libbook-api
+- Frontend image: https://hub.docker.com/r/yinyaodebaoyea/libbook-web
 
-Tags ที่ push: `latest`, `v1.0.0`
+Tags ที่ push:
+- `latest`
+- `v1.0.0`
 
-> หมายเหตุ: ก่อนใช้ `docker-compose.prod.yml` ให้แทนที่ `<dockerhub-username>` ด้วยชื่อผู้ใช้ Docker Hub ของคุณ
+> หากต้องการใช้ Docker Hub บัญชีอื่น ให้แก้ชื่อ image ใน `docker-compose.prod.yml`
 
-- `main` — production-ready code
-- `develop` — integration branch
-- `feature/*` — feature branches (merge เข้า develop ผ่าน Pull Request)
+## ✅ การทดสอบและ CI
 
-Commit message ใช้รูปแบบ: `feat:`, `fix:`, `docs:`, `chore:`, `ci:`
+### Run tests
 
-## 🔄 CI Pipeline
+```bash
+cd backend
+npm install
+npm test
+```
 
-Pipeline (`.github/workflows/ci.yml`) รันเมื่อ push ไป `develop`/`feature/*` และเมื่อเปิด Pull Request เข้า `main` ประกอบด้วย 3 jobs เรียงลำดับ:
+### Build Docker images local
 
+```bash
+docker build -t libbook-api ./backend
+docker build -t libbook-web ./frontend
+```
+
+### GitHub Actions
+
+Workflow `.github/workflows/ci.yml` จะรันเมื่อ:
+- push ไปยัง `develop`
+- push ไปยัง `feature/*`
+- เปิด Pull Request เข้า `main`
+
+Jobs:
 1. **lint** — ตรวจสอบโค้ดด้วย ESLint
-2. **test** — รัน Unit Test ด้วย Jest + Supertest
-3. **build** — ตรวจสอบว่า Docker image ทั้ง backend และ frontend build ผ่าน
+2. **test** — รัน unit tests ด้วย Jest + Supertest
+3. **build** — ตรวจสอบการ build ของ Docker image backend และ frontend
 
 ## 📁 โครงสร้างโปรเจกต์
 
 ```
-midterm-devops-libbook-<รหัสนักศึกษา>/
+midterm-devops-libbook-68319010014/
 ├── README.md
 ├── .gitignore
 ├── .env.example
