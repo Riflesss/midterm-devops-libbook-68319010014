@@ -5,9 +5,9 @@
 **ระดับชั้น/กลุ่มเรียน:** ปวส.2 / 3
 **รหัสโปรเจกต์:** `libbook`
 
-[![CI - libbook](https://github.com/Riflesss/midterm-devops-libbook-68319010014/actions/workflows/ci.yml/badge.svg)](https://github.com/<github-username>/midterm-devops-libbook-68319010014/actions/workflows/ci.yml)
+[![CI - libbook](https://github.com/Riflesss/midterm-devops-libbook-68319010014/actions/workflows/ci.yml/badge.svg)](https://github.com/Riflesss/midterm-devops-libbook-68319010014/actions/workflows/ci.yml)
 
-> ⚠️ แทนที่ `<github-username>` และ `<รหัสนักศึกษา>` ใน badge URL ด้านบนด้วยข้อมูลจริงของคุณ หลังจาก push repo ขึ้น GitHub แล้ว badge จะแสดงสถานะ CI ล่าสุดโดยอัตโนมัติ
+> CI workflow: [GitHub Actions](https://github.com/Riflesss/midterm-devops-libbook-68319010014/actions/workflows/ci.yml)
 
 ## คำอธิบายระบบ
 Libbook เป็นระบบบันทึกทะเบียนหนังสือของห้องสมุดวิทยาลัย พัฒนาด้วยสถาปัตยกรรม 3 ส่วน (frontend / backend / database) ที่รันแยกกันผ่าน Docker Compose ผู้ใช้สามารถเพิ่ม แก้ไข ลบ และดูรายการหนังสือได้ผ่านหน้าเว็บ โดยข้อมูลจะถูกเก็บอย่างถาวรใน PostgreSQL
