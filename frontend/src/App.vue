@@ -3,8 +3,8 @@
     <header>
       <h1>📚 Libbook - ระบบบันทึกข้อมูลหนังสือห้องสมุด</h1>
       <p class="student-info">
-        ชื่อ-นามสกุล: <strong>ชื่อ นามสกุล (แก้ไขตรงนี้)</strong> |
-        รหัสนักศึกษา: <strong>xxxxxxxxxxx (แก้ไขตรงนี้)</strong>
+        ชื่อ-นามสกุล: <strong>นายกนต์ธร สุติยวัน</strong> |
+        รหัสนักศึกษา: <strong>68319010014</strong>
       </p>
     </header>
 
