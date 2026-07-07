@@ -35,12 +35,10 @@ const PORT = process.env.PORT || 3000;
 if (require.main === module) {
   ensureSchema()
     .catch((err) => {
-      // eslint-disable-next-line no-console
       console.error('Failed to ensure database schema:', err.message);
     })
     .finally(() => {
       app.listen(PORT, () => {
-        // eslint-disable-next-line no-console
         console.log(`libbook-api listening on port ${PORT}`);
       });
     });
