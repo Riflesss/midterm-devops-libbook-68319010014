@@ -1,16 +1,15 @@
 # 📚 Libbook — ระบบบันทึกข้อมูลหนังสือห้องสมุด
 
-**ชื่อ-นามสกุล:** __________________________
-**รหัสนักศึกษา:** __________________________
-**ระดับชั้น/กลุ่มเรียน:** __________________________
+**ชื่อ-นามสกุล:** นายกนต์ธร สุติยวัน
+**รหัสนักศึกษา:** 68319010014
+**ระดับชั้น/กลุ่มเรียน:** ปริญญาตรี ปี 4 / กลุ่ม DevOps
 **รหัสโปรเจกต์:** `libbook`
 
-[![CI - libbook](https://github.com/<github-username>/midterm-devops-libbook-<รหัสนักศึกษา>/actions/workflows/ci.yml/badge.svg)](https://github.com/<github-username>/midterm-devops-libbook-<รหัสนักศึกษา>/actions/workflows/ci.yml)
+[![CI - libbook](https://github.com/<github-username>/midterm-devops-libbook-68319010014/actions/workflows/ci.yml/badge.svg)](https://github.com/<github-username>/midterm-devops-libbook-68319010014/actions/workflows/ci.yml)
 
 > ⚠️ แทนที่ `<github-username>` และ `<รหัสนักศึกษา>` ใน badge URL ด้านบนด้วยข้อมูลจริงของคุณ หลังจาก push repo ขึ้น GitHub แล้ว badge จะแสดงสถานะ CI ล่าสุดโดยอัตโนมัติ
 
 ## คำอธิบายระบบ
-
 Libbook เป็นระบบบันทึกทะเบียนหนังสือของห้องสมุดวิทยาลัย พัฒนาด้วยสถาปัตยกรรม 3 ส่วน (frontend / backend / database) ที่รันแยกกันผ่าน Docker Compose ผู้ใช้สามารถเพิ่ม แก้ไข ลบ และดูรายการหนังสือได้ผ่านหน้าเว็บ โดยข้อมูลจะถูกเก็บอย่างถาวรใน PostgreSQL
 
 **Stack ที่ใช้:**
@@ -28,6 +27,7 @@ Libbook เป็นระบบบันทึกทะเบียนหนั
 | GET    | `/api/books/:id`     | ดึงข้อมูลหนังสือตาม id         |
 | POST   | `/api/books`         | เพิ่มหนังสือใหม่               |
 | PUT    | `/api/books/:id`     | แก้ไขข้อมูลหนังสือ             |
+| PATCH  | `/api/books/:id`     | แก้ไขบางส่วนของข้อมูลหนังสือ   |
 | DELETE | `/api/books/:id`     | ลบหนังสือ                      |
 
 **ตัวอย่าง Body สำหรับ POST/PUT:**
@@ -77,7 +77,7 @@ docker compose -f docker-compose.prod.yml up -d
 
 Tags ที่ push: `latest`, `v1.0.0`
 
-## 🌿 Git Workflow
+> หมายเหตุ: ก่อนใช้ `docker-compose.prod.yml` ให้แทนที่ `<dockerhub-username>` ด้วยชื่อผู้ใช้ Docker Hub ของคุณ
 
 - `main` — production-ready code
 - `develop` — integration branch
