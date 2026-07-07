@@ -69,6 +69,39 @@ router.put('/:id', async (req, res) => {
   }
 });
 
+// PATCH /api/books/:id
+router.patch('/:id', async (req, res) => {
+  const fields = [];
+  const values = [];
+  const allowedFields = ['isbn', 'title', 'author', 'category', 'year', 'status'];
+
+  allowedFields.forEach((key) => {
+    if (req.body[key] !== undefined) {
+      values.push(req.body[key]);
+      fields.push(`${key}=$${values.length}`);
+    }
+  });
+
+  if (fields.length === 0) {
+    return res.status(400).json({ error: 'No fields provided for update' });
+  }
+
+  values.push(req.params.id);
+
+  try {
+    const result = await pool.query(
+      `UPDATE books SET ${fields.join(', ')} WHERE id=$${values.length} RETURNING *`,
+      values,
+    );
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Book not found' });
+    }
+    return res.json(result.rows[0]);
+  } catch (err) {
+    return res.status(500).json({ error: err.message });
+  }
+});
+
 // DELETE /api/books/:id
 router.delete('/:id', async (req, res) => {
   try {
