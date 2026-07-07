@@ -24,6 +24,13 @@ describe('Books API', () => {
     expect(res.statusCode).toBe(400);
   });
 
+  it('PATCH /api/books/:id should update partial book data', async () => {
+    pool.query.mockResolvedValueOnce({ rows: [{ id: 1, title: 'Updated Title' }] });
+    const res = await request(app).patch('/api/books/1').send({ title: 'Updated Title' });
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toEqual([{ id: 1, title: 'Updated Title' }][0]);
+  });
+
   it('GET /api/books/:id should return 404 when the book does not exist', async () => {
     pool.query.mockResolvedValueOnce({ rows: [] });
     const res = await request(app).get('/api/books/999');

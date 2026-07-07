@@ -1,8 +1,11 @@
 services:
   frontend:
+    image: ${DOCKERHUB_USERNAME:-libbook}/libbook-frontend:latest
     build:
       context: ./frontend
       dockerfile: Dockerfile
+      args:
+        VITE_API_URL: ${VITE_API_URL:-/api/books}
     ports:
       - "8080:80"
     depends_on:
@@ -11,6 +14,7 @@ services:
       - libbook-net
 
   backend:
+    image: ${DOCKERHUB_USERNAME:-libbook}/libbook-backend:latest
     build:
       context: ./backend
       dockerfile: Dockerfile
@@ -18,6 +22,13 @@ services:
       - "3000:3000"
     env_file:
       - .env
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}
+      PORT: 3000
     depends_on:
       - db
     networks:
